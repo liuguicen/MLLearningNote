@@ -86,11 +86,14 @@ self-attenttion有一个变形，multi-head self-attention 多头自注意力
 Self-attention的解果，其中绿色部分是一组query和key，红色部分是另外一组query和key，可以发现绿色部分其实更关注global的信息，而红色部分其实更关注local的信息。  
 ![](.attention和transformer笔记_images/8b39a850.png)
 
-# 位置参数
+# 位置编码，位置参数
 
 ![](.attention和transformer_images/166846eb.png)  
-前面的结构还有点问题，它无法得到位置信息。为什么，没想明白，暂略。后面看资料找到了：“Self-Attention中的排列不变性，不同顺序输入的tokens会得到一样的结果“， 可以很显然的从改变排列结果不变的角度得到。
-作者通过上图的方式添加位置信息，即a^i加上一个e^i,它等价于图中下面部分的在x后面接上一个0-1编码的位置参数。上面这个图中间的w^i W^p * x^i p^i似乎放反了(或者他们定义的矩阵乘法方式不同是反过去的)
+“Self-Attention中的排列不变性，不同顺序输入的tokens会得到一样的结果“， 可以很显然的从改变排列结果不变的角度得到。   
+
+所以需要位置编码，作者通过上图的方式添加位置信息，即a^i加上一个e^i,它等价于图中下面部分的在x后面接上一个0-1编码的位置参数。上面这个图中间的w^i W^p * x^i p^i似乎放反了(或者他们定义的矩阵乘法方式不同是反过去的)
+注意位置编码一般不止需要体现绝对位置，还要体现相对位置   
+
 编码的方法是一个尚待研究的问题，没有公认的很好的方法，原始论文中的是sin cos xxx的方法，是手工设计的，也可以设计不同的方法，还可以用学习的方法
 
 # 把数据序列化的方法
@@ -102,6 +105,8 @@ Self-attention的解果，其中绿色部分是一组query和key，红色部分�
 
 
 # transformer结构
+transformer整体结构如下
+![img_8.png](img_8.png)
 transformer 是从序列到序列模型发展起来的，本子上它是一种序列到序列模型，很多任务都可以用序列到序列模型处理，最直观的翻译，语音合成，还有各种NLP任务，直到各种图像任务都行。
 
 注意transformer模型不是和self-attention强绑定的，其中的self-attention层可以换成其它的层，比如rnn，cnn都行
@@ -156,6 +161,8 @@ encoder到decoder的输入是怎么进行的呢？如下：
 
 不同的cross attention方式，前面的是将encoder最后一层与decoder进行结合，实际上还可以把encoder中的不同层与decoder进行结合，这也是一个研究课题，可以下如下的样子
 ![img_7.png](img_7.png)
+
+
 ## 训练
 对于上面例子中的语言翻译任务，损失函数就像分类一样，对decoder的每个输出的向量，与真是字形成的独热编码向量做交叉熵即可。
 ![img_6.png](img_6.png)
